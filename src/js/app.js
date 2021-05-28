@@ -1,8 +1,7 @@
 import '../css/app.scss';
 import * as THREE from 'three';
 import { OrbitControls } from 'three/examples/jsm/controls/OrbitControls';
-// import { GLTFLoader } from 'three/examples/jsm/loaders/GLTFLoader';
-console.log("Hello World");
+import { GLTFLoader } from 'three/examples/jsm/loaders/GLTFLoader';
 
 export default class Sketch {
     constructor(options) {
@@ -16,7 +15,7 @@ export default class Sketch {
         this.camera = new THREE.PerspectiveCamera(45, this.width / this.height, 0.01, 100);
         this.camera.position.z = 5;
 
-        this.renderer = new THREE.WebGLRenderer({ antialias: true });
+        this.renderer = new THREE.WebGLRenderer({ antialias: true, alpha: true });
         this.container.appendChild(this.renderer.domElement);
 
         this.controls = new OrbitControls(this.camera, this.renderer.domElement);
@@ -28,10 +27,20 @@ export default class Sketch {
         this.render();
     }
     addObjects() {
-        this.geo = new THREE.BoxBufferGeometry(1,1,1,5,5,5);
-        this.mat = new THREE.MeshNormalMaterial();
-        this.cube = new THREE.Mesh(this.geo, this.mat);
-        this.scene.add(this.cube);
+        // this.geo = new THREE.BoxBufferGeometry(1,1,1,5,5,5);
+        // this.mat = new THREE.MeshNormalMaterial();
+        // this.cube = new THREE.Mesh(this.geo, this.mat);
+        // this.scene.add(this.cube);
+
+        var loader = new GLTFLoader();
+        loader.load('../src/models/scene.gltf', (gltf) => {
+            gltf.scene.traverse(function (child) {
+                if (child.isMesh) {
+                    child.material = new THREE.MeshNormalMaterial();
+                }
+            });
+            this.scene.add(gltf.scene);
+        });
     }
     setupResize() {
         window.addEventListener('resize', this.resize.bind(this));
