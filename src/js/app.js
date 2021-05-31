@@ -2,6 +2,8 @@ import '../css/app.scss';
 import * as THREE from 'three';
 import { OrbitControls } from 'three/examples/jsm/controls/OrbitControls';
 import { GLTFLoader } from 'three/examples/jsm/loaders/GLTFLoader';
+import { DRACOLoader } from 'three/examples/jsm/loaders/DRACOLoader';
+
 
 export default class Sketch {
     constructor(options) {
@@ -12,7 +14,7 @@ export default class Sketch {
         this.width = this.container.offsetWidth;
         this.height = this.container.offsetHeight;
 
-        this.camera = new THREE.PerspectiveCamera(45, this.width / this.height, 0.01, 100);
+        this.camera = new THREE.PerspectiveCamera(45, this.width / this.height, 0.01, 200);
         this.camera.position.z = 5;
 
         this.renderer = new THREE.WebGLRenderer({ antialias: true, alpha: true });
@@ -33,13 +35,21 @@ export default class Sketch {
         // this.scene.add(this.cube);
 
         var loader = new GLTFLoader();
-        loader.load('../src/models/scene.gltf', (gltf) => {
+        var dracoLoader = new DRACOLoader();
+        dracoLoader.setDecoderPath('../src/draco-files/');
+        loader.setDRACOLoader(dracoLoader);
+        loader.load('../src/models/skull.glb', (gltf) => {
             gltf.scene.traverse(function (child) {
                 if (child.isMesh) {
                     child.material = new THREE.MeshNormalMaterial();
+                    // child.scale.set(0.1, 0.1, 0.1);
                 }
             });
             this.scene.add(gltf.scene);
+        }, function (xhr) {
+            console.log((xhr.loaded / xhr.total * 100) + '% loaded');
+        }, function (error) {
+                console.log('An error happened');
         });
     }
     setupResize() {
