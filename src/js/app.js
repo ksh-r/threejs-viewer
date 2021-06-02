@@ -11,6 +11,7 @@ export default class Sketch {
         this.container = options.dom;
 
         this.scene = new THREE.Scene();
+        this.clock = new THREE.Clock();
 
         this.width = this.container.offsetWidth;
         this.height = this.container.offsetHeight;
@@ -49,6 +50,10 @@ export default class Sketch {
                 }
             });
             this.scene.add(gltf.scene);
+            this.mixer = new THREE.AnimationMixer(gltf.scene);
+            gltf.animations.forEach((clip) => {
+                this.mixer.clipAction(clip).play();
+            });
         }, function (xhr) {
             console.log((xhr.loaded / xhr.total * 100) + '% loaded');
         }, function (error) {
@@ -67,6 +72,7 @@ export default class Sketch {
         this.camera.updateProjectionMatrix();
     }
     render() {
+        if(this.mixer) this.mixer.update(this.clock.getDelta());
         this.controls.update();
         this.renderer.render(this.scene, this.camera);
         window.requestAnimationFrame(this.render.bind(this));
