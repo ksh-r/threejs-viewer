@@ -3,10 +3,22 @@
 <head>
     <meta charset="UTF-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="viewport" content="width=device-width, user-scalable=no, initial-scale=1.0, minimum-scale=1.0, maximum-scale=1.0">
     <title>AR GLTF Viewer</title>
+    <script src="https://aframe.io/releases/0.9.2/aframe.min.js"></script>
+    <script src="https://raw.githack.com/jeromeetienne/AR.js/master/aframe/build/aframe-ar.min.js"></script>
+    <script src="https://raw.githack.com/donmccurdy/aframe-extras/master/dist/aframe-extras.loaders.min.js"></script>
 </head>
 <body>
+    <a-scene embedded vr-mode-ui="enabled: false" arjs="sourceType: webcam; debugUIEnabled: false; detectionMode: mono_and_matrix; matrixCodeType: 3x3;">
+        <a-assets>
+            <a-asset-item id="CesiumMan" src="./src/models/CesiumMan.gltf"></a-asset-item>
+        </a-assets>
+        <a-marker id="animated-marker" type="barcode" value="6">
+            <a-entry animation-mixer gltf-model="#CesiumMan" scale="2 2 2"></a-entry>
+        </a-marker>
+        <a-entry camera></a-entry>
+    </a-scene>
     <link rel="stylesheet" href="./dist/css/main.css">
     <script src="./dist/js/bundle.js"></script>
 </body>
