@@ -15,9 +15,9 @@
             <a-asset-item id="CesiumMan" src="./src/models/CesiumMan.gltf"></a-asset-item>
         </a-assets>
         <a-marker id="animated-marker" type="barcode" value="6">
-            <a-entry animation-mixer gltf-model="#CesiumMan" scale="2 2 2"></a-entry>
+            <a-entity animation-mixer gltf-model="#CesiumMan" scale="2 2 2"></a-entity>
         </a-marker>
-        <a-entry camera></a-entry>
+        <a-entity camera></a-entity>
     </a-scene>
     <link rel="stylesheet" href="./dist/css/main.css">
     <script src="./dist/js/bundle.js"></script>
