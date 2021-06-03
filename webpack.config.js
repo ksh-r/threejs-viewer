@@ -9,6 +9,7 @@ const TerserPlugin = require('terser-webpack-plugin');
 module.exports = (env, argv) => ({
 	mode: argv.mode,
 	devtool: 'source-map',
+	// Change the below entry to './src/js/app2.js' to build index2.html
 	entry: './src/js/app.js',
 	output: {
 		publicPath: './dist/',
