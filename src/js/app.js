@@ -1,10 +1,9 @@
+// Run this script to display FBX Model
+
 import '../css/app.scss';
 import * as THREE from 'three';
 import { OrbitControls } from 'three/examples/jsm/controls/OrbitControls';
-import { GLTFLoader } from 'three/examples/jsm/loaders/GLTFLoader';
-import { DRACOLoader } from 'three/examples/jsm/loaders/DRACOLoader';
-import { MeshoptDecoder } from 'three/examples/jsm/libs/meshopt_decoder.module';
-// Compression with gltfpack, command -> gltfpack -i mwuvn.gltf -o mwuvnPacked.glb -cc
+import { FBXLoader } from 'three/examples/jsm/loaders/FBXLoader';
 
 export default class Sketch {
     constructor(options) {
@@ -38,22 +37,18 @@ export default class Sketch {
         // this.cube.position.set(-5,-5,-5)
         // this.scene.add(this.cube);
 
-        var loader = new GLTFLoader();
-        loader.setMeshoptDecoder(MeshoptDecoder);
-        var dracoLoader = new DRACOLoader();
-        dracoLoader.setDecoderPath('../src/draco-files/');
-        loader.setDRACOLoader(dracoLoader);
-        loader.load('../src/models/CesiumMan.gltf', (gltf) => {
-            gltf.scene.traverse(function (child) {
+        var loader = new FBXLoader();
+        loader.load('../src/models/model.fbx', (object) => {
+            this.mixer = new THREE.AnimationMixer(object);
+            object.traverse(function (child) {
                 if (child.isMesh) {
                     child.material = new THREE.MeshNormalMaterial();
                 }
             });
-            this.scene.add(gltf.scene);
-            this.mixer = new THREE.AnimationMixer(gltf.scene);
-            gltf.animations.forEach((clip) => {
+            object.animations.forEach((clip) => {
                 this.mixer.clipAction(clip).play();
             });
+            this.scene.add(object);
         }, function (xhr) {
             console.log((xhr.loaded / xhr.total * 100) + '% loaded');
         }, function (error) {
